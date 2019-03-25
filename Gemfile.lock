@@ -67,6 +67,7 @@ DEPENDENCIES
   guard-rspec
   rake (~> 10.0)
   rspec
+  thor
 
 BUNDLED WITH
    1.16.3

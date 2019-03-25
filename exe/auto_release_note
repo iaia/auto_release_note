@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+require 'auto_release_note'
+
+AutoReleaseNote::CLI.start(ARGV)

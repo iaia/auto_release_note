@@ -1,5 +1,6 @@
 require "auto_release_note/version"
 require "auto_release_note/git_log"
+require "auto_release_note/cli"
 
 module AutoReleaseNote
   class << self
