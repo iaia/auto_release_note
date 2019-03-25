@@ -2,10 +2,10 @@ module AutoReleaseNote
   class GitLog
     attr_reader :issues, :logs
 
-    def initialize(merge_log: nil)
+    def initialize(merge_log: nil, tag_query: nil)
       @logs = []
       @issues = []
-      merge_log = `git log --merges --oneline master..develop | grep 'Merge pull request #'` unless merge_log
+      merge_log = `git log --merges --oneline #{tag_query} | grep 'Merge pull request #'` unless merge_log
       parse_merge_log(merge_log)
       get_issue
     end
