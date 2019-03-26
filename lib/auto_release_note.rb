@@ -5,7 +5,7 @@ require "auto_release_note/cli"
 module AutoReleaseNote
   class << self
     def execute(username:, tag_query: nil)
-      log = AutoReleaseNote::GitLog.new(tag_query: tag_query)
+      log = AutoReleaseNote::GitLog.new(tag_query)
       repository = log.repository(username)
       links = log.logs.map {|l| l[:issue].to_i }.sort.map do |issue|
         "#{repository}/#{issue}"
