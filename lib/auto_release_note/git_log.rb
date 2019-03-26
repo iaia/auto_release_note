@@ -22,12 +22,15 @@ module AutoReleaseNote
 
     private
     def get_merge_log(tag_query)
-      merge_log ||= @git.log.between(tag_query.split("..")[0], tag_query.split("..")[1]) # `git log --merges --oneline #{tag_query} | grep 'Merge pull request #'`
+      # `git log --merges --oneline #{tag_query} | grep 'Merge pull request #'`
+      @git.log.between(tag_query.split("..")[0], tag_query.split("..")[1]).select do |commit|
+        commit.message.match(/Merge pull request #/)
+      end
     end
 
     def parse_merge_log(merge_log)
-      merge_log.each_line do |line|
-        logs << { pull_req_id: get_pull_req_id(line), branch: get_branch_name(line), issue: nil }
+      merge_log.each do |log|
+        logs << { pull_req_id: get_pull_req_id(log.message), branch: get_branch_name(log.message), issue: nil }
       end
       logs.compact!
     end

@@ -2,21 +2,27 @@ require 'auto_release_note/git_log'
 include AutoReleaseNote
 
 RSpec.describe GitLog do
+  before(:all) do
+    Commit = Struct.new(:message)
+    Remote = Struct.new(:url)
+  end
+
   before do
     allow(Git).to receive_message_chain(:open).and_return(git_mock)
-    allow(git_mock).to receive_message_chain(:log, :between).and_return(SAMPLE_MERGE_LOG)
+    allow(git_mock).to receive_message_chain(:log, :between).and_return(commits)
   end
   let(:git_mock) { double }
-
-  SAMPLE_MERGE_LOG = <<EOS
-697ca9e9 Merge pull request #123 from feature/987
-05c37e69 Merge pull request #234 from fix/876
-92de9173 Merge pull request #345 from bug-fix/765
-30fde4a2 Merge pull request #456 from hotfix/654
-430cf2f4 Merge pull request #567 from release/543
-f24bd8ae Merge pull request #678 from foo
-cdf82f34 Merge pull request #789 from bar
-EOS
+  let(:commits) do
+    [
+      Commit.new("697ca9e9 Merge pull request #123 from feature/987"),
+      Commit.new("05c37e69 Merge pull request #234 from fix/876"),
+      Commit.new("92de9173 Merge pull request #345 from bug-fix/765"),
+      Commit.new("30fde4a2 Merge pull request #456 from hotfix/654"),
+      Commit.new("430cf2f4 Merge pull request #567 from release/543"),
+      Commit.new("f24bd8ae Merge pull request #678 from foo"),
+      Commit.new("cdf82f34 Merge pull request #789 from bar")
+    ]
+  end
 
   context '.new' do
     subject do
@@ -43,7 +49,6 @@ EOS
       git_log.repositories
     end
     before do
-      Remote = Struct.new(:url)
       allow(git_mock).to receive(:remotes).and_return(
         [ Remote.new("https://github.com/iaia/auto_release_note.git"),
           Remote.new("https://github.com/example/auto_release_note.git") ]
@@ -62,7 +67,6 @@ EOS
       git_log.repository(username)
     end
     before do
-      Remote = Struct.new(:url)
       allow(git_mock).to receive(:remotes).and_return(
         [ Remote.new("https://github.com/iaia/auto_release_note.git"),
           Remote.new("https://github.com/example/auto_release_note.git") ]
