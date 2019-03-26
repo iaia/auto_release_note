@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = "Auto generate release notes"
   spec.description   = "Auto generate release notes"
-  spec.homepage      = "https://github/iaia"
+  spec.homepage      = "https://github.com/iaia"
   spec.license       = "MIT"
 
   # Specify which files should be added to the gem when it is released.
