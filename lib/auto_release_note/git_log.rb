@@ -1,16 +1,26 @@
+require 'git'
+
 module AutoReleaseNote
   class GitLog
     attr_reader :issues, :logs
 
-    def initialize(merge_log: nil, tag_query: nil)
+    def initialize(tag_query)
       @logs = []
       @issues = []
-      merge_log = `git log --merges --oneline #{tag_query} | grep 'Merge pull request #'` unless merge_log
-      parse_merge_log(merge_log)
+      @git = Git.open(Dir.pwd)
+      parse_merge_log(get_merge_log(tag_query))
       get_issue
     end
 
+    def repositories
+      @git.remotes.map {|remote| remote.url.gsub(/.git$/, '') }
+    end
+
     private
+    def get_merge_log(tag_query)
+      merge_log ||= @git.log.between(tag_query.split("..")[0], tag_query.split("..")[1]) # `git log --merges --oneline #{tag_query} | grep 'Merge pull request #'`
+    end
+
     def parse_merge_log(merge_log)
       merge_log.each_line do |line|
         logs << { pull_req_id: get_pull_req_id(line), branch: get_branch_name(line), issue: nil }

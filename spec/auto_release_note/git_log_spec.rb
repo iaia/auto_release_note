@@ -2,15 +2,13 @@ require 'auto_release_note/git_log'
 include AutoReleaseNote
 
 RSpec.describe GitLog do
-  context 'マージログが取得できない' do
+  before do
+    allow(Git).to receive_message_chain(:open).and_return(git_mock)
+    allow(git_mock).to receive_message_chain(:log, :between).and_return(SAMPLE_MERGE_LOG)
   end
+  let(:git_mock) { double }
 
-  context 'マージログが取得できる' do
-    subject do
-      GitLog.new(merge_log: SAMPLE_MERGE_LOG)
-    end
-
-    SAMPLE_MERGE_LOG = <<EOS
+  SAMPLE_MERGE_LOG = <<EOS
 697ca9e9 Merge pull request #123 from feature/987
 05c37e69 Merge pull request #234 from fix/876
 92de9173 Merge pull request #345 from bug-fix/765
@@ -19,6 +17,11 @@ RSpec.describe GitLog do
 f24bd8ae Merge pull request #678 from foo
 cdf82f34 Merge pull request #789 from bar
 EOS
+
+  context '.new' do
+    subject do
+      GitLog.new("master..HEAD")
+    end
 
     it 'mergeログがパースできる' do
       log = subject
@@ -32,6 +35,25 @@ EOS
       log = subject
       expect(log.logs.map {|l| l[:issue] }).to match_array \
         ['987', '876', '765', '654', '543', '678', '789']
+    end
+  end
+
+  context '#repositories' do
+    subject do
+      git_log.repositories
+    end
+    before do
+      Remote = Struct.new(:url)
+      allow(git_mock).to receive(:remotes).and_return(
+        [ Remote.new("https://github.com/iaia/auto_release_note.git"),
+          Remote.new("https://github.com/example/auto_release_note.git") ]
+      )
+    end
+    let(:git_log) { GitLog.new("master..HEAD") }
+
+    it do
+      expect(subject).to match_array \
+        ["https://github.com/iaia/auto_release_note", "https://github.com/example/auto_release_note"]
     end
   end
 end
