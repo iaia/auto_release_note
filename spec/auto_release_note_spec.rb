@@ -10,10 +10,7 @@ RSpec.describe AutoReleaseNote do
     before do
       mock = double
       allow(AutoReleaseNote::GitLog).to receive(:new).and_return(mock)
-      allow(mock).to receive(:repositories).and_return(
-        ["https://github.com/iaia/auto_release_note",
-         "https://github.com/example/auto_release_note"]
-      )
+      allow(mock).to receive(:repository).and_return("https://github.com/iaia/auto_release_note")
       allow(mock).to receive(:logs).and_return(
         [
           { issue: '987' },

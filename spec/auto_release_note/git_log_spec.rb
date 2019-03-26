@@ -56,4 +56,23 @@ EOS
         ["https://github.com/iaia/auto_release_note", "https://github.com/example/auto_release_note"]
     end
   end
+
+  context '#repository' do
+    subject do
+      git_log.repository(username)
+    end
+    before do
+      Remote = Struct.new(:url)
+      allow(git_mock).to receive(:remotes).and_return(
+        [ Remote.new("https://github.com/iaia/auto_release_note.git"),
+          Remote.new("https://github.com/example/auto_release_note.git") ]
+      )
+    end
+    let(:git_log) { GitLog.new("master..HEAD") }
+    let(:username) { 'iaia' }
+
+    it do
+      expect(subject).to eq "https://github.com/iaia/auto_release_note"
+    end
+  end
 end

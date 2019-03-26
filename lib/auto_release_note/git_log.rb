@@ -12,6 +12,10 @@ module AutoReleaseNote
       get_issue
     end
 
+    def repository(username)
+      repositories.find {|url| url.include?(username) }
+    end
+
     def repositories
       @git.remotes.map {|remote| remote.url.gsub(/.git$/, '') }
     end
