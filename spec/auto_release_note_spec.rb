@@ -30,7 +30,7 @@ RSpec.describe AutoReleaseNote do
       release_note = subject
 
       result = ['987', '876', '765', '654', '543', '678', '789'].map do |issue|
-        "https://github.com/#{username}/auto_release_note/#{issue}"
+        "https://github.com/#{username}/auto_release_note/issues/#{issue}"
       end
 
       expect(release_note).to match_array result

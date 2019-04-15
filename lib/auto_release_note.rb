@@ -8,7 +8,7 @@ module AutoReleaseNote
       log = AutoReleaseNote::GitLog.new(tag_query)
       repository = log.repository(username)
       links = log.logs.map {|l| l[:issue].to_i }.sort.map do |issue|
-        "#{repository}/#{issue}"
+        "#{repository}/issues/#{issue}"
       end
     end
   end
