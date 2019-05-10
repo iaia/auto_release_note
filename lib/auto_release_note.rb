@@ -7,7 +7,7 @@ module AutoReleaseNote
     def execute(username:, tag_query: nil)
       log = AutoReleaseNote::GitLog.new(tag_query)
       repository = log.repository(username)
-      links = log.logs.map {|l| l[:issue].to_i }.sort.map do |issue|
+      links = log.logs.map {|l| l[:issue].to_i }.uniq.sort.map do |issue|
         "#{repository}/issues/#{issue}"
       end
     end

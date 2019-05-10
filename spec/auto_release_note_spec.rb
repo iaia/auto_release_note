@@ -14,6 +14,7 @@ RSpec.describe AutoReleaseNote do
       allow(mock).to receive(:logs).and_return(
         [
           { issue: '987' },
+          { issue: '987' },
           { issue: '876' },
           { issue: '765' },
           { issue: '654' },
