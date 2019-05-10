@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    auto_release_note (0.1.6)
+    auto_release_note (0.1.7)
       git
       thor
 
