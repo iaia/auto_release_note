@@ -23,7 +23,8 @@ module AutoReleaseNote
     private
     def get_merge_log(tag_query)
       # `git log --merges --oneline #{tag_query} | grep 'Merge pull request #'`
-      @git.log.between(tag_query.split("..")[0], tag_query.split("..")[1]).select do |commit|
+      # FIXME: don't use 200
+      @git.log(200).between(tag_query.split("..")[0], tag_query.split("..")[1]).select do |commit|
         commit.message.match(/Merge pull request #/)
       end
     end
